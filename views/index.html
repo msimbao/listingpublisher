@@ -8,26 +8,56 @@
         <link rel="stylesheet" href="../public/css/style.css" />
         <link rel="stylesheet" href="../public/css/bootstrap.css" />
 
+
     </head>
 <body>
 
     <div class="jumbotron text-center">
         <h1>Welcome to Listing Publisher {{name}} </h1>
         <p>Please Authenticate to begin using this app</p> 
-        <a href={{auth_link}}><button type="button" class="btn btn-primary">Authenticate</button></a>
+        <a href={{auth_link}}>
+            <button type="button" class="btn btn-primary">         
+                <!-- <span style='font-size:20px;'>&#128268;</span> -->
+                     Authenticate
+            </button>
+        </a>
       </div>
 
 
       <div class="container-fluid">
         <div class="row">
-          <div class="col-sm-4 text-center text-capitalize" style="background-color:lavender;">
-            <h4>Current Design:</h4>
-                <p>{{design_line1}}</p>
-                <p>{{design_line2}}</p>
-                <p>{{design_line3}}</p>
-                <p>{{design_line4}}</p>
+            <div class="col-sm-4 text-center text-capitalize" style="background-color:lavender;">
+                <h4>Current Design:</h4>
+                    <p>{{design_line1}}</p>
+                    <p>{{design_line2}}</p>
+                    <p>{{design_line3}}</p>
+                    <p>{{design_line4}}</p>
+                </div>
+            <div class="col-sm-8 text-center" style="background-color:lavenderblush;">
+                <form action="{{ url_for('read_form')}}" method="post"> 
+                    <label for="line1" class="form-label">Design</label> 
+                    <input name="design_line1" class="form-control" id="line1" value="{{design_line1}}"> 
+                    <input name="design_line2" class="form-control" id="line2" value="{{design_line2}}"> 
+                    <input name="design_line3" class="form-control" id="line3" value="{{design_line3}}"> 
+                    <input name="design_line4" class="form-control" id="line4" value="{{design_line4}}"> 
+
+                    <label for="title" class="form-label">Title,Tags & Section</label> 
+                    <input name="title" class="form-control" id="title" value="{{title}}"> 
+                    <input name="tags" class="form-control" id="tags" value="{{tags}}"> 
+
+                    <select name="section" id="section">
+                        <option value="volvo" selected>Volvo</option>
+                        <option value="volvo">Volvo</option>
+                        <option value="saab">Saab</option>
+                        <option value="mercedes">Mercedes</option>
+                        <option value="audi">Audi</option>
+                    </select>
+
+
+
+                    <button type="submit" class="btn btn-primary">Submit</button> 
+                </form> 
             </div>
-          <div class="col-sm-8 text-center" style="background-color:lavenderblush;">.col-sm-8</div>
         </div>
       </div>
     

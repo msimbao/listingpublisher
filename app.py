@@ -1,7 +1,7 @@
 
 
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from dotenv import set_key, load_dotenv
 from pathlib import Path
 
@@ -15,12 +15,15 @@ load_dotenv()
 # set_key(dotenv_path=env_file_path, key_to_set="EMAIL", value_to_set="abc@gmail.com")
 
 #TODO
-#switch everything to .env file-
+#Figure out sections
 #switch designs to input form edit system
+
 #add button for generate designs
+
 #add buttons for generate shirt images
 #add button for preview shirt images
 #add button for publish shirt images
+
 #do all this for sweatshirts too
 
 #Define Variables for Current Design
@@ -29,6 +32,10 @@ design_line1=os.getenv('DESIGN_LINE1')
 design_line2=os.getenv('DESIGN_LINE2')
 design_line3=os.getenv('DESIGN_LINE3')
 design_line4=os.getenv('DESIGN_LINE4')
+
+title=os.getenv('TITLE')
+tags=os.getenv('TAGS')
+section=os.getenv('SECTION')
 
 #Generate Authentication Link
 client_id=os.getenv('KEYSTRING')
@@ -46,7 +53,28 @@ def index():
                            design_line1=design_line1,
                            design_line2=design_line2,
                            design_line3=design_line3,
-                           design_line4=design_line4
+                           design_line4=design_line4,
+                           title=title,
+                           tags=tags
                            )
+
+@app.route('/read-form', methods=['POST']) 
+def read_form(): 
+  
+    # Get the form data as Python ImmutableDict datatype  
+    data = request.form 
+  
+    ## Return the extracted information  
+    return { 
+        'design_line1'     : data['design_line1'], 
+        'design_line2'     : data['design_line2'],
+        'design_line3'     : data['design_line3'], 
+        'design_line4'     : data['design_line4'], 
+        'title'     : data['title'], 
+        'tags'     : data['tags'], 
+        'section'     : data['section'],         
+
+        # 'gender'      : 'Male' if data['genderMale'] else 'Female', 
+    } 
 
 
