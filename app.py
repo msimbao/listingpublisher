@@ -24,7 +24,7 @@ load_dotenv()
 #do all this for sweatshirts too
 
 #Define Variables for Current Design
-animal = 'Mphatso'
+name = 'Mphatso'
 design_line1=os.getenv('DESIGN_LINE1')
 design_line2=os.getenv('DESIGN_LINE2')
 design_line3=os.getenv('DESIGN_LINE3')
@@ -36,12 +36,12 @@ state=os.getenv('STATE')
 code_challenge=os.getenv('CODE_CHALLENGE')
 auth_link = "https://www.etsy.com/oauth/connect?response_type=code&redirect_uri=http://localhost:3003/oauth/redirect&scope=email_r%20listings_r%20listings_w%20shops_r%20shops_w&client_id="+client_id+"&state="+state+"&code_challenge="+code_challenge+"&code_challenge_method=S256"
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='public', template_folder='views')
 
 @app.route("/")
 def index():
     return render_template('index.html',
-                           value=animal,
+                           name=name,
                            auth_link=auth_link,
                            design_line1=design_line1,
                            design_line2=design_line2,

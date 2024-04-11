@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Listing Publisher</title>
+
+        <!-- CSS-->
+        <link rel="stylesheet" href="../public/css/style.css" />
+        <link rel="stylesheet" href="../public/css/bootstrap.css" />
+
+    </head>
+<body>
+
+    <div class="jumbotron text-center">
+        <h1>Welcome to Listing Publisher {{name}} </h1>
+        <p>Please Authenticate to begin using this app</p> 
+        <a href={{auth_link}}><button type="button" class="btn btn-primary">Authenticate</button></a>
+      </div>
+
+
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-4 text-center text-capitalize" style="background-color:lavender;">
+            <h4>Current Design:</h4>
+                <p>{{design_line1}}</p>
+                <p>{{design_line2}}</p>
+                <p>{{design_line3}}</p>
+                <p>{{design_line4}}</p>
+            </div>
+          <div class="col-sm-8 text-center" style="background-color:lavenderblush;">.col-sm-8</div>
+        </div>
+      </div>
+    
+</body>
+</html>
