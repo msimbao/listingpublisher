@@ -12,6 +12,7 @@
     </head>
 <body>
 
+
     <div class="jumbotron text-center">
         <h1>Welcome to Listing Publisher {{name}} </h1>
         <p>Please Authenticate to begin using this app</p> 
@@ -32,6 +33,27 @@
                     <p>{{design_line2}}</p>
                     <p>{{design_line3}}</p>
                     <p>{{design_line4}}</p>
+                    <br>
+                    <a href="{{ url_for('generate_designs')}}">
+                        <button type="button" class="btn btn-primary loading-link">         
+                            <!-- <span style='font-size:20px;'>&#128268;</span> -->
+                                Generate Design
+                        </button>
+                    </a>
+                    <br>
+                    <a href="{{ url_for('generate_shirts')}}">
+                        <button type="button" class="btn btn-primary loading-link">         
+                            <!-- <span style='font-size:20px;'>&#128268;</span> -->
+                                Generate Shirts
+                        </button>
+                    </a>
+                    <br>
+                    <a href="{{ url_for('generate_sweatshirts')}}">
+                        <button type="button" class="btn btn-primary loading-link">         
+                            <!-- <span style='font-size:20px;'>&#128268;</span> -->
+                                Generate Sweatshirts
+                        </button>
+                    </a>
                 </div>
             <div class="col-sm-8 text-center" style="background-color:lavenderblush;">
                 <form action="{{ url_for('read_form')}}" method="post"> 
@@ -53,13 +75,12 @@
                         <option value="audi">Audi</option>
                     </select>
 
-
-
                     <button type="submit" class="btn btn-primary">Submit</button> 
                 </form> 
             </div>
         </div>
       </div>
     
+   
 </body>
 </html>

@@ -1,13 +1,13 @@
-
-
 import os
 from flask import Flask, render_template, request
 from dotenv import set_key, load_dotenv
 from pathlib import Path
+import generateDesigns as generateDesigns
+import generateMockups
 
 load_dotenv()
 
-# env_file_path = Path(".env")
+env_file_path = Path(".env")
 # Create the file if it does not exist.
 # env_file_path.touch(mode=0o600, exist_ok=False)
 # Save some values to the file.
@@ -25,9 +25,6 @@ load_dotenv()
 #add button for publish shirt images
 
 #do all this for sweatshirts too
-
-#Define Variables for Current Design
-name = 'Mphatso'
 design_line1=os.getenv('DESIGN_LINE1')
 design_line2=os.getenv('DESIGN_LINE2')
 design_line3=os.getenv('DESIGN_LINE3')
@@ -36,6 +33,9 @@ design_line4=os.getenv('DESIGN_LINE4')
 title=os.getenv('TITLE')
 tags=os.getenv('TAGS')
 section=os.getenv('SECTION')
+
+#Define Variables for Current Design
+name = 'Mphatso'
 
 #Generate Authentication Link
 client_id=os.getenv('KEYSTRING')
@@ -47,6 +47,15 @@ app = Flask(__name__, static_folder='public', template_folder='views')
 
 @app.route("/")
 def index():
+
+    design_line1=os.getenv('DESIGN_LINE1')
+    design_line2=os.getenv('DESIGN_LINE2')
+    design_line3=os.getenv('DESIGN_LINE3')
+    design_line4=os.getenv('DESIGN_LINE4')
+
+    title=os.getenv('TITLE')
+    tags=os.getenv('TAGS')
+    section=os.getenv('SECTION')
     return render_template('index.html',
                            name=name,
                            auth_link=auth_link,
@@ -65,16 +74,60 @@ def read_form():
     data = request.form 
   
     ## Return the extracted information  
-    return { 
-        'design_line1'     : data['design_line1'], 
-        'design_line2'     : data['design_line2'],
-        'design_line3'     : data['design_line3'], 
-        'design_line4'     : data['design_line4'], 
-        'title'     : data['title'], 
-        'tags'     : data['tags'], 
-        'section'     : data['section'],         
+    set_key(dotenv_path=env_file_path, key_to_set="DESIGN_LINE1", value_to_set=data['design_line1'])
+    set_key(dotenv_path=env_file_path, key_to_set="DESIGN_LINE2", value_to_set=data['design_line2'])
+    set_key(dotenv_path=env_file_path, key_to_set="DESIGN_LINE3", value_to_set=data['design_line3'])
+    set_key(dotenv_path=env_file_path, key_to_set="DESIGN_LINE4", value_to_set=data['design_line4'])
+    set_key(dotenv_path=env_file_path, key_to_set="TITLE", value_to_set=data['title'])
+    set_key(dotenv_path=env_file_path, key_to_set="TAGS", value_to_set=data['tags'])
+    set_key(dotenv_path=env_file_path, key_to_set="SECTION", value_to_set=data['section'])
 
-        # 'gender'      : 'Male' if data['genderMale'] else 'Female', 
-    } 
+    return index()
+
+@app.route('/generate-designs', methods=['POST','GET']) 
+def generate_designs(): 
+    
+    current_design = [design_line1,design_line2,design_line3,design_line4]
+
+    generateDesigns.MakeAllDesigns(current_design)
+
+    return finished_gen_images()
+
+@app.route('/generate-shirts', methods=['POST','GET']) 
+def generate_shirts(): 
+    
+    designIndex = 0
+    templateIndex = 0
+    colorIndex = 0
+    productType = 'shirts'
 
 
+    generateMockups.generateAllImages(designIndex,templateIndex,colorIndex,productType)
+
+    return finished_gen_images()
+
+@app.route('/generate-sweatshirts', methods=['POST','GET']) 
+def generate_sweatshirts(): 
+    
+    designIndex = 0
+    templateIndex = 0
+    colorIndex = 0
+    productType = 'sweatshirts'
+
+
+    generateMockups.generateAllImages(designIndex,templateIndex,colorIndex,productType)
+
+    return finished_gen_images()
+
+@app.route("/preview-images")
+def preview_images():
+
+    return render_template('images.html')
+
+@app.route("/finished-gen-images")
+def finished_gen_images():
+
+    return render_template('finished_gen_images.html')
+
+if __name__ == '__main__':
+    app.run(debug=True, port=3003)
