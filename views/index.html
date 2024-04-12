@@ -54,6 +54,12 @@
                                 Generate Sweatshirts
                         </button>
                     </a>
+                    <a href="{{ url_for('get_listing_inventory')}}">
+                        <button type="button" class="btn btn-primary loading-link">         
+                            <!-- <span style='font-size:20px;'>&#128268;</span> -->
+                                Generate Listing Inventory
+                        </button>
+                    </a>
                 </div>
             <div class="col-sm-8 text-center" style="background-color:lavenderblush;">
                 <form action="{{ url_for('read_form')}}" method="post"> 

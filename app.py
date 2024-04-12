@@ -1,49 +1,47 @@
+
+#Flask, os and env modules
 import os
+import json
+from datetime import datetime, timedelta
 from flask import Flask, render_template, request
 from dotenv import set_key, load_dotenv
 from pathlib import Path
+
+#Custom Modules
 import generateDesigns as generateDesigns
 import generateMockups
+
+#Etsy API Modules
 from etsyv3.util.auth import AuthHelper
+from etsyv3.enums import ListingRequestState, WhenMade, WhoMade
+from etsyv3.models.file_request import UploadListingImageRequest
+from etsyv3.models import UpdateListingRequest
+
+from etsyv3 import EtsyAPI
+from etsyv3.etsy_api import ETSY_API_BASEURL, Unauthorised
+from etsyv3.models.listing_request import (
+    CreateDraftListingRequest,
+    UpdateListingInventoryRequest,
+)
+
+from etsyv3.models.product import Product
 
 load_dotenv()
 
 env_file_path = Path(".env")
-# Create the file if it does not exist.
-# env_file_path.touch(mode=0o600, exist_ok=False)
-# Save some values to the file.
-# set_key(dotenv_path=env_file_path, key_to_set="USERNAME", value_to_set="John")
-# set_key(dotenv_path=env_file_path, key_to_set="EMAIL", value_to_set="abc@gmail.com")
 
-#TODO
-#Figure out sections
-#switch designs to input form edit system
-
-#add button for generate designs
-
-#add buttons for generate shirt images
-#add button for preview shirt images
-#add button for publish shirt images
-
-#do all this for sweatshirts too
-design_line1=os.getenv('DESIGN_LINE1')
-design_line2=os.getenv('DESIGN_LINE2')
-design_line3=os.getenv('DESIGN_LINE3')
-design_line4=os.getenv('DESIGN_LINE4')
-
-title=os.getenv('TITLE')
-tags=os.getenv('TAGS')
-section=os.getenv('SECTION')
+#TODO add button for publish shirt images
 
 
 #Define Variables for Current Design
 name = 'Mphatso'
 
-#Generate Authentication Link
-client_id=os.getenv('KEYSTRING')
+
+#Generate Authentication Link ALL REMAIN THE SAME
+keystring=os.getenv('KEYSTRING')
 state=os.getenv('STATE')
 code_challenge=os.getenv('CODE_CHALLENGE')
-auth_link = "https://www.etsy.com/oauth/connect?response_type=code&redirect_uri=http://localhost:3003/oauth/redirect&scope=email_r%20listings_r%20listings_w%20shops_r%20shops_w&client_id="+client_id+"&state="+state+"&code_challenge="+code_challenge+"&code_challenge_method=S256"
+auth_link = "https://www.etsy.com/oauth/connect?response_type=code&redirect_uri=http://localhost:3003/oauth/redirect&scope=email_r%20listings_r%20listings_w%20shops_r%20shops_w&client_id="+keystring+"&state="+state+"&code_challenge="+code_challenge+"&code_challenge_method=S256"
 
 code_verifier = os.getenv('CODE_VERIFIER');
 redirect_url=os.getenv('REDIRECT_URI')
@@ -55,7 +53,7 @@ def oauth_callback():
     state = request.args["state"]
     code = request.args["code"]
     auth = AuthHelper(
-        client_id, redirect_url, code_verifier=code_verifier, state=state
+        keystring, redirect_url, code_verifier=code_verifier, state=state
     )
     auth.set_authorisation_code(code, state)
     token = auth.get_access_token()
@@ -70,7 +68,7 @@ def oauth_callback():
 
 @app.route("/")
 def index():
-
+    
     design_line1=os.getenv('DESIGN_LINE1')
     design_line2=os.getenv('DESIGN_LINE2')
     design_line3=os.getenv('DESIGN_LINE3')
@@ -133,7 +131,6 @@ def generate_shirts():
     colorIndex = 0
     productType = 'shirts'
 
-
     generateMockups.generateAllImages(designIndex,templateIndex,colorIndex,productType)
 
     return finished()
@@ -161,7 +158,30 @@ def finished():
 
     return render_template('finished.html')
 
+@app.route("/get-listing-inventory")
+def get_listing_inventory():
 
+    def fn_save(one, two, three):
+        pass
+
+    EXPIRY_FUTURE = datetime.utcnow() + timedelta(hours=1)
+    EXPIRY_PAST = datetime.utcnow() - timedelta(hours=1)
+
+    KEYSTRING=os.getenv('KEYSTRING')
+    ACCESS_TOKEN=os.getenv('ACCESS_TOKEN')
+    REFRESH_TOKEN=os.getenv('REFRESH_TOKEN')
+
+    etsy = EtsyAPI(KEYSTRING, ACCESS_TOKEN, REFRESH_TOKEN, EXPIRY_FUTURE, fn_save)
+    etsy.get_authenticated_user()
+
+    #Serialzing json
+    data = etsy.get_listing_inventory(1692185454)
+    json_object = json.dumps(data, indent=4)
+
+    with open('output.json','w') as outfile:
+        outfile.write(json_object)
+
+    return render_template("finished.html")
 
 if __name__ == '__main__':
     app.run(debug=True, port=3003)
