@@ -4,6 +4,7 @@ from dotenv import set_key, load_dotenv
 from pathlib import Path
 import generateDesigns as generateDesigns
 import generateMockups
+from etsyv3.util.auth import AuthHelper
 
 load_dotenv()
 
@@ -34,6 +35,7 @@ title=os.getenv('TITLE')
 tags=os.getenv('TAGS')
 section=os.getenv('SECTION')
 
+
 #Define Variables for Current Design
 name = 'Mphatso'
 
@@ -43,7 +45,28 @@ state=os.getenv('STATE')
 code_challenge=os.getenv('CODE_CHALLENGE')
 auth_link = "https://www.etsy.com/oauth/connect?response_type=code&redirect_uri=http://localhost:3003/oauth/redirect&scope=email_r%20listings_r%20listings_w%20shops_r%20shops_w&client_id="+client_id+"&state="+state+"&code_challenge="+code_challenge+"&code_challenge_method=S256"
 
+code_verifier = os.getenv('CODE_VERIFIER');
+redirect_url=os.getenv('REDIRECT_URI')
+
 app = Flask(__name__, static_folder='public', template_folder='views')
+
+@app.route("/oauth/redirect")
+def oauth_callback():
+    state = request.args["state"]
+    code = request.args["code"]
+    auth = AuthHelper(
+        client_id, redirect_url, code_verifier=code_verifier, state=state
+    )
+    auth.set_authorisation_code(code, state)
+    token = auth.get_access_token()
+
+    set_key(dotenv_path=env_file_path, key_to_set="ACCESS_TOKEN", value_to_set=token['access_token'])
+    set_key(dotenv_path=env_file_path, key_to_set="REFRESH_TOKEN", value_to_set=token['refresh_token'])
+
+    os.environ["ACCESS_TOKEN"] = token['access_token']
+    os.environ["REFRESH_TOKEN"] = token['refresh_token']
+
+    return finished()
 
 @app.route("/")
 def index():
@@ -64,7 +87,8 @@ def index():
                            design_line3=design_line3,
                            design_line4=design_line4,
                            title=title,
-                           tags=tags
+                           tags=tags,
+                           section=section
                            )
 
 @app.route('/read-form', methods=['POST']) 
@@ -82,16 +106,24 @@ def read_form():
     set_key(dotenv_path=env_file_path, key_to_set="TAGS", value_to_set=data['tags'])
     set_key(dotenv_path=env_file_path, key_to_set="SECTION", value_to_set=data['section'])
 
-    return index()
+    os.environ["DESIGN_LINE1"] = data['design_line1']
+    os.environ["DESIGN_LINE2"] = data['design_line2']
+    os.environ["DESIGN_LINE3"] = data['design_line3']
+    os.environ["DESIGN_LINE4"] = data['design_line4']
+    os.environ["TITLE"] = data['title']
+    os.environ["TAGS"] = data['tags']
+    os.environ["SECTION"] = data['section']
+
+    return finished()
 
 @app.route('/generate-designs', methods=['POST','GET']) 
 def generate_designs(): 
     
-    current_design = [design_line1,design_line2,design_line3,design_line4]
+    current_design = [os.environ["DESIGN_LINE1"],os.environ["DESIGN_LINE2"],os.environ["DESIGN_LINE3"],os.environ["DESIGN_LINE4"]]
 
     generateDesigns.MakeAllDesigns(current_design)
 
-    return finished_gen_images()
+    return finished()
 
 @app.route('/generate-shirts', methods=['POST','GET']) 
 def generate_shirts(): 
@@ -104,7 +136,7 @@ def generate_shirts():
 
     generateMockups.generateAllImages(designIndex,templateIndex,colorIndex,productType)
 
-    return finished_gen_images()
+    return finished()
 
 @app.route('/generate-sweatshirts', methods=['POST','GET']) 
 def generate_sweatshirts(): 
@@ -117,17 +149,19 @@ def generate_sweatshirts():
 
     generateMockups.generateAllImages(designIndex,templateIndex,colorIndex,productType)
 
-    return finished_gen_images()
+    return finished()
 
 @app.route("/preview-images")
 def preview_images():
 
     return render_template('images.html')
 
-@app.route("/finished-gen-images")
-def finished_gen_images():
+@app.route("/finished")
+def finished():
 
-    return render_template('finished_gen_images.html')
+    return render_template('finished.html')
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=3003)
