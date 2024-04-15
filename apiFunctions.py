@@ -15,6 +15,7 @@ from etsyv3.models.listing_request import (
 
 from etsyv3.models.product import Product
 from math import pi
+import time
 
 from pathlib import Path
 from dotenv import load_dotenv
@@ -36,6 +37,19 @@ TAGS=os.getenv('TAGS')
 TITLE=os.getenv('TITLE')
 SHOP_ID=os.getenv('SHOP_ID')
 DESCRIPTION=os.getenv('DESCRIPTION')
+PRODUCT_TYPE=os.getenv('PRODUCT_TYPE')
+
+def refreshEnvironmentVariableStores():
+    global KEYSTRING,ACCESS_TOKEN,REFRESH_TOKEN,TAGS,TITLE,SHOP_ID,DESCRIPTION,PRODUCT_TYPE
+    KEYSTRING=os.getenv('KEYSTRING')
+    ACCESS_TOKEN=os.getenv('ACCESS_TOKEN')
+    REFRESH_TOKEN=os.getenv('REFRESH_TOKEN')
+
+    TAGS=os.getenv('TAGS')
+    TITLE=os.getenv('TITLE')
+    SHOP_ID=os.getenv('SHOP_ID')
+    DESCRIPTION=os.getenv('DESCRIPTION')
+    PRODUCT_TYPE=os.getenv('PRODUCT_TYPE')
 
 etsy = EtsyAPI(KEYSTRING, ACCESS_TOKEN, REFRESH_TOKEN, EXPIRY_FUTURE, fn_save)
 
@@ -45,21 +59,51 @@ def saveMultipleListingsToJSON():
     with open('output.json','w') as outfile:
         outfile.write(json_object)
 
-def saveExampleListingToJSON():
-    data=etsy.get_listing(1710704203)
+def saveExampleListingToJSON(listingID,productType):
+    data=etsy.get_listing(listingID)
     json_object = json.dumps(data, indent=4)
-    with open('exampleListing.json','w') as outfile:
+    path = 'templates/products/example'+productType+'Listing.json'
+    with open(path,'w') as outfile:
         outfile.write(json_object)
 
-def saveExampleListingImagesToJSON():
-    data=etsy.get_listing_images(1710704203)
+def saveExampleListingImagesToJSON(listingID,productType):
+    data=etsy.get_listing_images(listingID)
     json_object = json.dumps(data, indent=4)
-    with open('exampleListingImages.json','w') as outfile:
+    path = 'templates/products/example'+productType+'ImagesListing.json'
+    with open(path,'w') as outfile:
+        outfile.write(json_object)
+
+def saveShopSectionsToJSON(listingID,productType):
+    data=etsy.get_shop_sections(SHOP_ID)
+    json_object = json.dumps(data, indent=4)
+    with open('templates/products/sections.json','w') as outfile:
         outfile.write(json_object)
 
 
-def generateListing():
+#Run to generate Info about the products
+# saveExampleListingImagesToJSON(1710704203,'shirts')
+# saveExampleListingToJSON(1710704203,'shirts')
+
+# saveExampleListingImagesToJSON(1692185394,'sweatshirts')
+# saveExampleListingToJSON(1692185394,'sweatshirts')
+
+
+def generateListing(productType):
     #===============Create Draft Listing
+
+    testimonailsID = [5868605322]
+    otherImagesIDs = []
+    shipping_profile_id = 0
+
+    if productType == "shirts":
+        shipping_profile_id=213749066457
+        otherImagesIDs = [5916690381,5868605014,5868605450]
+    else:
+        shipping_profile_id=213746740947
+        otherImagesIDs = [5916598883,5868757866,5868514582]
+
+    image_ids = otherImagesIDs + testimonailsID
+
     listing = CreateDraftListingRequest(
             quantity=1,
             title=TITLE,
@@ -69,10 +113,10 @@ def generateListing():
             when_made=WhenMade.MADE_TO_ORDER,
             taxonomy_id=482,
             tags=TAGS.split(","),
-            shipping_profile_id= 213749066457,
-            shop_section_id= 42393967,
+            shipping_profile_id= shipping_profile_id,
+            shop_section_id= 42395341,
             production_partner_ids=[2826409],
-            image_ids=[5868605322,5916690381,5868605014,5868605450]
+            image_ids=image_ids
         )
     
     etsy.create_draft_listing(SHOP_ID,listing)
@@ -128,41 +172,39 @@ def updateListingInventory(productType,listingID):
     etsy.update_listing_inventory(listingID,listing_inventory_request)
 
 
-import time
+def create_and_publish_baby():
+    productType =PRODUCT_TYPE
+ 
+    designIndex=0
 
-# listing = CreateDraftListingRequest(
-#         quantity=1,
-#         title=TITLE,
-#         description=DESCRIPTION,
-#         price=100,
-#         who_made=WhoMade.SOMEONE_ELSE,
-#         when_made=WhenMade.MADE_TO_ORDER,
-#         taxonomy_id=482,
-#         tags=TAGS.split(","),
-#         shipping_profile_id= 213749066457,
-#         shop_section_id= 42393967,
-#         production_partner_ids=[2826409]
-#     )
+    while designIndex < 5:
+        templateIndex = 0
+        while templateIndex < 2:
+            generateListing(productType)
+            time.sleep(3)
+            newListing = etsy.get_listings_by_shop(SHOP_ID,ListingRequestState.DRAFT)["results"][0]["listing_id"]
 
-# etsy.create_draft_listing(SHOP_ID,listing)
+            listingID = newListing
+            print(listingID)
 
-generateListing()
-time.sleep(3)
-newListing = etsy.get_listings_by_shop(SHOP_ID,ListingRequestState.DRAFT)["results"][0]["listing_id"]
+            
+            colorIndex = 0
 
-listingID = newListing
-print(listingID)
-productType ='shirts'
+            for colorIndex in range(2,7):
+                pathToImage = "output/" + str(designIndex) + str(colorIndex) + ".jpg"
+                uploadImages(listingID,pathToImage)
+                time.sleep(3)
+                colorIndex +=1
 
-designIndex=0
-colorIndex = 0
+            pathToImage = "output/" + str(designIndex) + str(templateIndex) + ".jpg"
+            uploadImages(listingID,pathToImage)
 
-for colorIndex in range(2,7):
-    pathToImage = "output/" + str(designIndex) + str(colorIndex) + ".jpg"
-    uploadImages(listingID,pathToImage)
-    colorIndex +=1
+            updateListingInventory(productType,listingID)
 
-pathToImage = "output/" + str(designIndex) + str(1) + ".jpg"
-uploadImages(listingID,pathToImage)
+            update = UpdateListingRequest(
+                state=ListingRequestState.ACTIVE,
+            )
 
-updateListingInventory(productType,listingID)
+            etsy.update_listing(SHOP_ID,listingID,update)
+            templateIndex+=1
+        designIndex+=1

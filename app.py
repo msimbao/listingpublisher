@@ -140,51 +140,8 @@ def finished():
 @app.route("/get-listing-inventory")
 def get_listing_inventory():
 
-    productType = "shirts"
-    # etsy = apiFunctions.etsy
-    
-    designIndex = 0
-    while designIndex < 6:
-        # previousListing = etsy.get_listings_by_shop(apiFunctions.SHOP_ID,"draft")["results"][0]["listing_id"]
-        # apiFunctions.generateListing()
-        # time.sleep(3)
-        # newListing = etsy.get_listings_by_shop(apiFunctions.SHOP_ID,"draft")["results"][0]["listing_id"]
-        # while (previousListing == newListing):
-        #     time.sleep(2)
-        #     newListing = etsy.get_listings_by_shop(apiFunctions.SHOP_ID,"draft")["results"][0]["listing_id"]
-        
-        # listingID = newListing
-        # print(listingID)
-
-        # colorIndex = 0
-        # pathToImage = "output/" + str(designIndex) + str(1) + ".jpg"
-        # apiFunctions.uploadImages(listingID,pathToImage)
-        # colorIndex +=1
-        # for colorIndex in range(2,7):
-        #     pathToImage = "output/" + str(designIndex) + str(colorIndex) + ".jpg"
-        #     apiFunctions.uploadImages(listingID,pathToImage)
-        #     colorIndex +=1
-
-        # apiFunctions.updateListingInventory(productType,listingID)
-
-        # apiFunctions.generateListing()
-        # listingID = 3121241212
-        # #Check for new listing and loop till a new one shows up
-        # #Get new listing number
-        
-        # colorIndex = 0
-        # pathToImage = "output/" + str(designIndex) + str(2) + ".jpg"
-        # apiFunctions.uploadImages(listingID,pathToImage)
-        # colorIndex +=1
-        # for colorIndex in range(2,7):
-        #     pathToImage = "output/" + str(designIndex) + str(colorIndex) + ".jpg"
-        #     apiFunctions.uploadImages(listingID,pathToImage)
-        #     colorIndex +=1
-
-        # apiFunctions.updateListingInventory(productType,listingID)
-
-        designIndex+=1
-
+    apiFunctions.refreshEnvironmentVariableStores()
+    apiFunctions.create_and_publish_baby()
 
     return render_template("finished.html")
 

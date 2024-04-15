@@ -27,7 +27,7 @@ def GenerateFinalImage(designNumber,tempNumber,designIndex,design,template,produ
 
     designMask = Image.new('RGBA', template.size, (0, 0, 0, 0))
 
-    if (tempNumber == 2 and productType=="shirt"):
+    if (tempNumber == 2) and (productType=="shirts"):
         design = design.rotate(10)
         designMask.paste(design, (int((template.size[0] / 2) - (design.size[0] / 2))+100, 520), design.convert('RGBA'))
     else:
