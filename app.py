@@ -1,9 +1,7 @@
 
 #Flask, os and env modules
 import os
-import json
-
-from datetime import datetime, timedelta
+import time
 from flask import Flask, render_template, request
 from dotenv import set_key, load_dotenv
 from pathlib import Path
@@ -11,21 +9,10 @@ from pathlib import Path
 #Custom Modules
 import generateDesigns as generateDesigns
 import generateMockups
+import apiFunctions
 
 #Etsy API Modules
 from etsyv3.util.auth import AuthHelper
-from etsyv3.enums import ListingRequestState, WhenMade, WhoMade
-from etsyv3.models.file_request import UploadListingImageRequest
-from etsyv3.models import UpdateListingRequest
-
-from etsyv3 import EtsyAPI
-from etsyv3.etsy_api import ETSY_API_BASEURL, Unauthorised
-from etsyv3.models.listing_request import (
-    CreateDraftListingRequest,
-    UpdateListingInventoryRequest,
-)
-
-from etsyv3.models.product import Product
 
 load_dotenv()
 
@@ -33,10 +20,8 @@ env_file_path = Path(".env")
 
 #TODO add button for publish shirt images
 
-
 #Define Variables for Current Design
 name = 'Mphatso'
-
 
 #Generate Authentication Link ALL REMAIN THE SAME
 keystring=os.getenv('KEYSTRING')
@@ -78,6 +63,8 @@ def index():
     title=os.getenv('TITLE')
     tags=os.getenv('TAGS')
     section=os.getenv('SECTION')
+    productType=os.getenv('PRODUCT_TYPE')
+
     return render_template('index.html',
                            name=name,
                            auth_link=auth_link,
@@ -87,7 +74,8 @@ def index():
                            design_line4=design_line4,
                            title=title,
                            tags=tags,
-                           section=section
+                           section=section,
+                           productType=productType
                            )
 
 @app.route('/read-form', methods=['POST']) 
@@ -104,6 +92,8 @@ def read_form():
     set_key(dotenv_path=env_file_path, key_to_set="TITLE", value_to_set=data['title'])
     set_key(dotenv_path=env_file_path, key_to_set="TAGS", value_to_set=data['tags'])
     set_key(dotenv_path=env_file_path, key_to_set="SECTION", value_to_set=data['section'])
+    set_key(dotenv_path=env_file_path, key_to_set="PRODUCT_TYPE", value_to_set=data['productType'])
+
 
     os.environ["DESIGN_LINE1"] = data['design_line1']
     os.environ["DESIGN_LINE2"] = data['design_line2']
@@ -112,6 +102,7 @@ def read_form():
     os.environ["TITLE"] = data['title']
     os.environ["TAGS"] = data['tags']
     os.environ["SECTION"] = data['section']
+    os.environ["PRODUCT_TYPE"] = data['productType']
 
     return finished()
 
@@ -124,26 +115,13 @@ def generate_designs():
 
     return finished()
 
-@app.route('/generate-shirts', methods=['POST','GET']) 
-def generate_shirts(): 
+@app.route('/generate-mockups', methods=['POST','GET']) 
+def generate_mockups(): 
     
     designIndex = 0
     templateIndex = 0
     colorIndex = 0
-    productType = 'shirts'
-
-    generateMockups.generateAllImages(designIndex,templateIndex,colorIndex,productType)
-
-    return finished()
-
-@app.route('/generate-sweatshirts', methods=['POST','GET']) 
-def generate_sweatshirts(): 
-    
-    designIndex = 0
-    templateIndex = 0
-    colorIndex = 0
-    productType = 'sweatshirts'
-
+    productType = os.environ["PRODUCT_TYPE"]
 
     generateMockups.generateAllImages(designIndex,templateIndex,colorIndex,productType)
 
@@ -162,25 +140,51 @@ def finished():
 @app.route("/get-listing-inventory")
 def get_listing_inventory():
 
-    def fn_save(one, two, three):
-        pass
+    productType = "shirts"
+    # etsy = apiFunctions.etsy
+    
+    designIndex = 0
+    while designIndex < 6:
+        # previousListing = etsy.get_listings_by_shop(apiFunctions.SHOP_ID,"draft")["results"][0]["listing_id"]
+        # apiFunctions.generateListing()
+        # time.sleep(3)
+        # newListing = etsy.get_listings_by_shop(apiFunctions.SHOP_ID,"draft")["results"][0]["listing_id"]
+        # while (previousListing == newListing):
+        #     time.sleep(2)
+        #     newListing = etsy.get_listings_by_shop(apiFunctions.SHOP_ID,"draft")["results"][0]["listing_id"]
+        
+        # listingID = newListing
+        # print(listingID)
 
-    EXPIRY_FUTURE = datetime.utcnow() + timedelta(hours=1)
-    EXPIRY_PAST = datetime.utcnow() - timedelta(hours=1)
+        # colorIndex = 0
+        # pathToImage = "output/" + str(designIndex) + str(1) + ".jpg"
+        # apiFunctions.uploadImages(listingID,pathToImage)
+        # colorIndex +=1
+        # for colorIndex in range(2,7):
+        #     pathToImage = "output/" + str(designIndex) + str(colorIndex) + ".jpg"
+        #     apiFunctions.uploadImages(listingID,pathToImage)
+        #     colorIndex +=1
 
-    KEYSTRING=os.getenv('KEYSTRING')
-    ACCESS_TOKEN=os.getenv('ACCESS_TOKEN')
-    REFRESH_TOKEN=os.getenv('REFRESH_TOKEN')
+        # apiFunctions.updateListingInventory(productType,listingID)
 
-    etsy = EtsyAPI(KEYSTRING, ACCESS_TOKEN, REFRESH_TOKEN, EXPIRY_FUTURE, fn_save)
-    etsy.get_authenticated_user()
+        # apiFunctions.generateListing()
+        # listingID = 3121241212
+        # #Check for new listing and loop till a new one shows up
+        # #Get new listing number
+        
+        # colorIndex = 0
+        # pathToImage = "output/" + str(designIndex) + str(2) + ".jpg"
+        # apiFunctions.uploadImages(listingID,pathToImage)
+        # colorIndex +=1
+        # for colorIndex in range(2,7):
+        #     pathToImage = "output/" + str(designIndex) + str(colorIndex) + ".jpg"
+        #     apiFunctions.uploadImages(listingID,pathToImage)
+        #     colorIndex +=1
 
-    #Serialzing json
-    data = etsy.get_listing_inventory(1692185454)
-    json_object = json.dumps(data, indent=4)
+        # apiFunctions.updateListingInventory(productType,listingID)
 
-    with open('output.json','w') as outfile:
-        outfile.write(json_object)
+        designIndex+=1
+
 
     return render_template("finished.html")
 

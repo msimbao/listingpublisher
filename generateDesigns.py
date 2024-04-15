@@ -1,6 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont
 
-# currentDesign = ["it's a","beautiful","day for","banjo"]
+currentDesign = ["it's a","beautiful","day for","banjo"]
 nectarinePalette=[(242,202,141,255),(247,187,153,255),(249,221,210,255),(225,183,208,255)]
 marginPalette=[(185,92,42,255),(224,165,52,255),(167,185,148,255),(109,146,121,255)]
 
@@ -77,4 +77,4 @@ def MakeAllDesigns(currentDesign):
     generateDesign(currentDesign,4,'margin','colorCharacter',marginPalette,1550,2000)
     generateDesign(currentDesign,5,'nectarine','colorCharacter',nectarinePalette,1550,2000)
 
-# MakeAllDesigns(currentDesign)
+MakeAllDesigns(currentDesign)

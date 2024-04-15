@@ -1,3 +1,138 @@
 {
-    
+    "count": 19,
+    "results": [
+        {
+            "shop_section_id": 42378910,
+            "title": "Book Lover",
+            "rank": 1,
+            "user_id": 749396258,
+            "active_listing_count": 89
+        },
+        {
+            "shop_section_id": 42393967,
+            "title": "Food",
+            "rank": 2,
+            "user_id": 749396258,
+            "active_listing_count": 60
+        },
+        {
+            "shop_section_id": 42395337,
+            "title": "Funny \\ Other ",
+            "rank": 3,
+            "user_id": 749396258,
+            "active_listing_count": 94
+        },
+        {
+            "shop_section_id": 42395341,
+            "title": "Hobby\\Passion\\Career",
+            "rank": 4,
+            "user_id": 749396258,
+            "active_listing_count": 401
+        },
+        {
+            "shop_section_id": 42395343,
+            "title": "Sport",
+            "rank": 5,
+            "user_id": 749396258,
+            "active_listing_count": 34
+        },
+        {
+            "shop_section_id": 42395347,
+            "title": "Farm Life \\ Country",
+            "rank": 6,
+            "user_id": 749396258,
+            "active_listing_count": 10
+        },
+        {
+            "shop_section_id": 42395351,
+            "title": "Introvert",
+            "rank": 7,
+            "user_id": 749396258,
+            "active_listing_count": 0
+        },
+        {
+            "shop_section_id": 42381728,
+            "title": "Conditions",
+            "rank": 8,
+            "user_id": 749396258,
+            "active_listing_count": 12
+        },
+        {
+            "shop_section_id": 42395359,
+            "title": "Camping \\ Lake \\ Travel",
+            "rank": 9,
+            "user_id": 749396258,
+            "active_listing_count": 0
+        },
+        {
+            "shop_section_id": 42381732,
+            "title": "Nurse \\ Dentist \\ Doctor",
+            "rank": 10,
+            "user_id": 749396258,
+            "active_listing_count": 10
+        },
+        {
+            "shop_section_id": 42381736,
+            "title": "Real Estate",
+            "rank": 11,
+            "user_id": 749396258,
+            "active_listing_count": 0
+        },
+        {
+            "shop_section_id": 42381740,
+            "title": "Flower \\ Plant Lover",
+            "rank": 12,
+            "user_id": 749396258,
+            "active_listing_count": 111
+        },
+        {
+            "shop_section_id": 42381742,
+            "title": "Dog \\ Cat \\ Animal",
+            "rank": 13,
+            "user_id": 749396258,
+            "active_listing_count": 111
+        },
+        {
+            "shop_section_id": 42381746,
+            "title": "Baking \\ Cookie Lover",
+            "rank": 14,
+            "user_id": 749396258,
+            "active_listing_count": 0
+        },
+        {
+            "shop_section_id": 42381752,
+            "title": "Teacher \\ Therapist ",
+            "rank": 15,
+            "user_id": 749396258,
+            "active_listing_count": 0
+        },
+        {
+            "shop_section_id": 42381754,
+            "title": "Inspirational",
+            "rank": 16,
+            "user_id": 749396258,
+            "active_listing_count": 0
+        },
+        {
+            "shop_section_id": 42381756,
+            "title": "Pregnancy Announcement",
+            "rank": 17,
+            "user_id": 749396258,
+            "active_listing_count": 1
+        },
+        {
+            "shop_section_id": 42381760,
+            "title": "Wedding \\ Bridal Party",
+            "rank": 18,
+            "user_id": 749396258,
+            "active_listing_count": 0
+        },
+        {
+            "shop_section_id": 42395385,
+            "title": "Mom \\ Dad \\ Family",
+            "rank": 19,
+            "user_id": 749396258,
+            "active_listing_count": 38
+        }
+    ]
 }

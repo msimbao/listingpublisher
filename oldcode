@@ -1,0 +1,216 @@
+ 
+from datetime import datetime, timedelta
+import json
+import os
+from etsyv3.enums import ListingRequestState, WhenMade, WhoMade
+from etsyv3.models.file_request import UploadListingImageRequest
+from etsyv3.models import UpdateListingRequest
+
+from etsyv3 import EtsyAPI
+from etsyv3.etsy_api import ETSY_API_BASEURL, Unauthorised
+from etsyv3.models.listing_request import (
+    CreateDraftListingRequest,
+    UpdateListingInventoryRequest,
+)
+
+from etsyv3.models.product import Product
+from math import pi
+
+from dotenv import load_dotenv
+load_dotenv()
+
+EXPIRY_FUTURE = datetime.utcnow() + timedelta(hours=1)
+EXPIRY_PAST = datetime.utcnow() - timedelta(hours=1)
+
+KEYSTRING=os.getenv('KEYSTRING')
+ACCESS_TOKEN=os.getenv('ACCESS_TOKEN')
+REFRESH_TOKEN=os.getenv('REFRESH_TOKEN')
+
+TITLE = os.getenv('TITLE')
+
+def fn_save(one, two, three):
+    pass
+
+test_dict = {"limit": None, "offset": 100}
+url = EtsyAPI._generate_get_uri(ETSY_API_BASEURL, **test_dict)
+expect_url = f"{ETSY_API_BASEURL}?offset=100"
+
+etsy = EtsyAPI(KEYSTRING, ACCESS_TOKEN, REFRESH_TOKEN, EXPIRY_FUTURE, fn_save)
+etsy.get_authenticated_user()
+
+# data = etsy.get_listing_inventory(1710704203)
+# data = etsy.get_listing(1710704203)
+
+# #Serialzing json
+# json_object = json.dumps(data, indent=4)
+
+# with open('output.json','w') as outfile:
+#     outfile.write(json_object)
+
+# listing = CreateDraftListingRequest(
+#             quantity=1,
+#             title="Geckle and Hide!",
+#             description="Description",
+#             price=100,
+#             who_made=WhoMade.COLLECTIVE,
+#             when_made=WhenMade.MADE_TO_ORDER,
+#             taxonomy_id=482,
+#             tags=['test'],
+#             shipping_profile_id= 213749066457,
+#             shop_section_id= 42393967
+#         )
+
+# TAGS=os.getenv('TAGS')
+# TITLE=os.getenv('TITLE')
+# SHOP_ID=os.getenv('SHOP_ID')
+# DESCRIPTION=os.getenv('DESCRIPTION')
+
+# listing = CreateDraftListingRequest(
+#         quantity=1,
+#         title=TITLE,
+#         description=DESCRIPTION,
+#         price=100,
+#         who_made=WhoMade.I_DID,
+#         when_made=WhenMade.MADE_TO_ORDER,
+#         taxonomy_id=482,
+#         tags=TAGS.split(","),
+#         shipping_profile_id= 213749066457,
+#         shop_section_id= 42393967
+#     )
+
+# etsy.create_draft_listing(41036878,listing)
+
+# listing_image_upload = UploadListingImageRequest(
+#             image_bytes=UploadListingImageRequest.generate_bytes_from_file(
+#                 "output/00.jpg"
+#             )
+#         )
+# etsy.upload_listing_image(41036878,1711645005,listing_image_upload)
+
+
+# properties = [
+#                 {
+#                     "property_id": 513,
+#                     "property_name": "Colors",
+#                     "value_ids": [
+#                         74650027590
+#                     ],
+#                     "values": [
+#                         "Athletic Heather"
+#                     ]
+#                 },
+#                 {
+#                     "property_id": 514,
+#                     "property_name": "Sizes",
+#                     "value_ids": [
+#                         54657375794
+#                     ],
+#                     "values": [
+#                         "S"
+#                     ]
+#                 }
+#         ]
+# offerings = [
+#                 {
+#                     "quantity": 999,
+#                     "is_enabled": True,
+#                     "price": 24.99
+#                 }
+#     ]
+
+# properties2 = [
+#                 {
+#                     "property_id": 513,
+#                     "property_name": "Colors",
+#                     "value_ids": [
+#                         74650027590
+#                     ],
+#                     "values": [
+#                         "Athletic Heather"
+#                     ]
+#                 },
+#                 {
+#                     "property_id": 514,
+#                     "property_name": "Sizes",
+#                     "value_ids": [
+#                         54657375794
+#                     ],
+#                     "values": [
+#                         "M"
+#                     ]
+#                 }
+#         ]
+# offerings2 = [
+#                 {
+#                     "quantity": 999,
+#                     "is_enabled": True,
+#                     "price": 29.99
+#                 }
+#     ]
+# properties3 = [
+#                 {
+#                     "property_id": 513,
+#                     "property_name": "Colors",
+#                     "value_ids": [
+#                         74650027590
+#                     ],
+#                     "values": [
+#                         "Athletic Heather"
+#                     ]
+#                 },
+#                 {
+#                     "property_id": 514,
+#                     "property_name": "Sizes",
+#                     "value_ids": [
+#                         54657375794
+#                     ],
+#                     "values": [
+#                         "L"
+#                     ]
+#                 }
+#         ]
+# offerings3 = [
+#                 {
+#                     "quantity": 999,
+#                     "is_enabled": True,
+#                     "price": 35.99
+#                 }
+#     ]
+# product1 = Product("", properties, offerings)
+# product2 = Product("", properties2, offerings2)
+# product3 = Product("", properties3, offerings3)
+
+# product_list = [product1,product2,product3]
+product_list = []
+# Opening JSON file
+with open('templates/products/shirts.json') as json_file:
+    data = json.load(json_file)
+
+    products = data['products']
+    offerings = []
+    properties = []
+
+    for product in products:
+        offerings = product['offerings']
+        del offerings[0]['is_deleted']
+        del offerings[0]['offering_id']
+        offerings[0]['is_enabled'] = True
+
+        price = '{0:.2f}'.format(offerings[0]['price']['amount'] / offerings[0]['price']['divisor'])
+        # print(price)
+        offerings[0]['price'] = price
+
+        properties = product['property_values']
+        for property in properties:
+            del property['scale_id']
+            del property['scale_name']
+
+        productToWrite = Product("",properties,offerings)
+        product_list.append(productToWrite)
+
+price_on_property = [513,514]
+quantity_on_property = [513,514]
+
+listing_inventory_request = UpdateListingInventoryRequest(product_list, price_on_property, quantity_on_property, 0)
+
+# etsy.update_listing_inventory(1711645005,listing_inventory_request)

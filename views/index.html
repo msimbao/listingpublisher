@@ -37,27 +37,21 @@
                     <a href="{{ url_for('generate_designs')}}">
                         <button type="button" class="btn btn-primary loading-link">         
                             <!-- <span style='font-size:20px;'>&#128268;</span> -->
-                                Generate Design
+                                Generate Designs
                         </button>
                     </a>
                     <br>
-                    <a href="{{ url_for('generate_shirts')}}">
+                    <a href="{{ url_for('generate_mockups')}}">
                         <button type="button" class="btn btn-primary loading-link">         
                             <!-- <span style='font-size:20px;'>&#128268;</span> -->
-                                Generate Shirts
+                                Generate Mockups
                         </button>
                     </a>
                     <br>
-                    <a href="{{ url_for('generate_sweatshirts')}}">
-                        <button type="button" class="btn btn-primary loading-link">         
-                            <!-- <span style='font-size:20px;'>&#128268;</span> -->
-                                Generate Sweatshirts
-                        </button>
-                    </a>
                     <a href="{{ url_for('get_listing_inventory')}}">
                         <button type="button" class="btn btn-primary loading-link">         
                             <!-- <span style='font-size:20px;'>&#128268;</span> -->
-                                Generate Listing Inventory
+                                Publish Everything
                         </button>
                     </a>
                 </div>
@@ -72,6 +66,13 @@
                     <label for="title" class="form-label">Title,Tags & Section</label> 
                     <input name="title" class="form-control" id="title" value="{{title}}"> 
                     <input name="tags" class="form-control" id="tags" value="{{tags}}"> 
+
+                    <select name="productType" id="productType">
+                        <option value="{{productType}}" selected>{{productType}}</option>
+                        <option value="shirts">shirts</option>
+                        <option value="sweatshirts">sweatshirts</option>
+                    </select>
+
 
                     <select name="section" id="section">
                         <option value="{{section}}" selected>{{section}}</option>
