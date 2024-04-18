@@ -23,6 +23,35 @@
         </a>
       </div>
 
+      <script>
+        function notifyMe() {
+        if (Notification.permission !== 'granted')
+        Notification.requestPermission();
+        else {
+        var notification = new Notification('Notification title', {
+        icon: 'https://i.etsystatic.com/isla/33bf50/61480050/isla_500x500.61480050_hhojfr3u.jpg?version=0',
+        body: 'Hey there! Your SnugPrinted Action has been completed!',
+        });
+        notification.onclick = function() {
+        window.open('http://stackoverflow.com/a/13328397/1269037');
+        };
+        }
+        }
+
+        // request permission on page load
+        document.addEventListener('DOMContentLoaded', function() {
+        if (!Notification) {
+        alert('Desktop notifications not available in your browser. Try Chromium.');
+        return;
+        }
+
+        if (Notification.permission !== 'granted')
+        Notification.requestPermission();
+        
+        notifyMe() 
+        });
+
+      </script>
 
 
 </body>
