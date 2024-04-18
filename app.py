@@ -140,7 +140,10 @@ def finished():
 @app.route("/get-listing-inventory")
 def get_listing_inventory():
 
-    apiFunctions.refreshEnvironmentVariableStores()
+    apiFunctions.ACCESS_TOKEN = os.environ["ACCESS_TOKEN"]
+    apiFunctions.REFRESH_TOKEN = os.environ["REFRESH_TOKEN"]
+
+    # apiFunctions.refreshEnvironmentVariableStores()
     apiFunctions.create_and_publish_baby()
 
     return render_template("finished.html")

@@ -173,6 +173,12 @@ def updateListingInventory(productType,listingID):
 
 
 def create_and_publish_baby():
+
+    ACCESS_TOKEN=os.getenv('ACCESS_TOKEN')
+    REFRESH_TOKEN=os.getenv('REFRESH_TOKEN')
+    EXPIRY_FUTURE = datetime.utcnow() + timedelta(hours=1)
+    etsy = EtsyAPI(KEYSTRING, ACCESS_TOKEN, REFRESH_TOKEN, EXPIRY_FUTURE, fn_save)
+
     productType =PRODUCT_TYPE
  
     designIndex=0

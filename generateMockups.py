@@ -118,6 +118,13 @@ def generateAllImages(designIndex,templateIndex,colorIndex,productType):
             else:
                 colorMask.paste(design,(int((color.size[0] / 2) - (design.size[0] / 2))-75,int((colorMask.size[1] / 2) - (design.size[1] / 2))+700),design.convert('RGBA'))
 
+            #Steps to Create New Folded Sweater Mask'
+            if productType == "sweatshirts":
+                protoMask = Image.new('RGBA', color.size, (0, 0, 0, 0))
+                imageMask = Image.open('templates/masks/'+str(colorNumber)+'.png').convert('L').resize(color.size)
+                finalMask = Image.composite(colorMask,protoMask,imageMask)
+                colorMask = finalMask
+            #Use Final Mask instead of Color Mask
 
             if (colorNumber == 3) or (colorNumber == 4):
                 finalImage = Multiply(color,colorMask).convert('RGB')
