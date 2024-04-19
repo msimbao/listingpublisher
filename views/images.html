@@ -14,36 +14,65 @@
 
     <div class="jumbotron text-center">
         <h1>Preview Images</h1>
-        <p>Here are the generated images. Close when done</p> 
-        <a href="#" onclick="window.close()">
+        <p>Here are the generated images. Go back when done</p> 
+        <a href="{{ url_for('index')}}">
             <button type="button" class="btn btn-primary">         
                 <!-- <span style='font-size:20px;'>&#128268;</span> -->
-                     Close
+                     Go Back
             </button>
         </a>
       </div>
 
-      <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-4 text-center text-capitalize">
-                <img src="../designs/1.png" style="width:100%;">
-            </div>
+        <div class="gallery">
+                <img class="preview" src="../public/designs/1.png" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/designs/2.png" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/designs/3.png" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/designs/4.png" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/designs/5.png" onclick="this.requestFullscreen()">
 
-            <div class="col-sm-4 text-center text-capitalize">
-                <img src="../designs/2.png" style="width:100%;">
-            </div>
+                <img class="preview" src="../public/output/30.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/20.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/10.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/40.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/00.jpg" onclick="this.requestFullscreen()">
 
-            <div class="col-sm-4 text-center text-capitalize">
-                <img src="../designs/3.png" style="width:100%;">
-            </div>
+                <img class="preview" src="../public/output/31.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/21.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/11.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/41.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/01.jpg" onclick="this.requestFullscreen()">
 
-            <div class="col-sm-4 text-center text-capitalize">
-                <img src="../designs/4.png" style="width:100%;">
-            </div>
+                <img class="preview" src="../public/output/32.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/22.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/12.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/42.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/02.jpg" onclick="this.requestFullscreen()">
 
-            <div class="col-sm-4 text-center text-capitalize">
-                <img src="../designs/5.png" style="width:100%;">
-            </div>
+                <img class="preview" src="../public/output/33.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/23.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/13.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/43.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/03.jpg" onclick="this.requestFullscreen()">
+
+                <img class="preview" src="../public/output/34.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/24.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/14.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/44.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/04.jpg" onclick="this.requestFullscreen()">
+
+                <img class="preview" src="../public/output/35.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/25.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/15.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/45.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/05.jpg" onclick="this.requestFullscreen()">
+
+                <img class="preview" src="../public/output/36.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/26.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/16.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/46.jpg" onclick="this.requestFullscreen()">
+                <img class="preview" src="../public/output/06.jpg" onclick="this.requestFullscreen()">
+
         </div>
+
 </body>
 </html>

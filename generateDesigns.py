@@ -63,7 +63,7 @@ def generateDesign(designWords,outputNumber,font,style,palette,MAX_W,MAX_H):
 
                 current_h += pad
 
-    im.save("designs/"+str(outputNumber)+".png")
+    im.save("public/designs/"+str(outputNumber)+".png")
 
 def MakeAllDesigns(currentDesign):
     """_summary_

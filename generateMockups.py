@@ -42,14 +42,14 @@ def GenerateFinalImage(designNumber,tempNumber,designIndex,design,template,produ
     else:
         finalImage = Normal(template, designMask).convert('RGB')
 
-    finalImage.save('output/'+str(designIndex)+'1.jpg')
+    finalImage.save('public/output/'+str(designIndex)+'1.jpg')
 
 
 #Setup Defaults
 def generateAllImages(designIndex,templateIndex,colorIndex,productType):
 
     #Define Variables
-    designsDirectory = 'designs'
+    designsDirectory = 'public/designs'
     defaultsDirectory = 'templates/defaults'
 
     templateDirectory = 'templates/'+productType
@@ -83,7 +83,7 @@ def generateAllImages(designIndex,templateIndex,colorIndex,productType):
         # else:
         defaultTemplate = Image.open(defaultsDirectory + "/" + productType + ".jpg")
         defaultTemplate.paste(design, (int((defaultTemplate.size[0] / 2) - (design.size[0] / 2)), 500), design.convert('RGBA'))
-        defaultTemplate.save('output/'+str(designIndex)+'0.jpg')
+        defaultTemplate.save('public/output/'+str(designIndex)+'0.jpg')
 
         #Make Another Image Given a New Template
 
@@ -144,7 +144,7 @@ def generateAllImages(designIndex,templateIndex,colorIndex,productType):
                 else:
                     design = design.rotate(12)
 
-            finalImage.save('output/'+str(designIndex) + str(colorIndex+2) + '.jpg')
+            finalImage.save('public/output/'+str(designIndex) + str(colorIndex+2) + '.jpg')
 
             colorIndex += 1
 

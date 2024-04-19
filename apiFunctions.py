@@ -23,21 +23,12 @@ from dotenv import load_dotenv
 def fn_save(one, two, three):
     pass
 
-env_path = Path('.', '.env')
-load_dotenv(dotenv_path=env_path)
+    EXPIRY_FUTURE = datetime.utcnow() + timedelta(hours=1)
+    EXPIRY_PAST = datetime.utcnow() - timedelta(hours=1)
 
-EXPIRY_FUTURE = datetime.utcnow() + timedelta(hours=1)
-EXPIRY_PAST = datetime.utcnow() - timedelta(hours=1)
-
-KEYSTRING=os.getenv('KEYSTRING')
-ACCESS_TOKEN=os.getenv('ACCESS_TOKEN')
-REFRESH_TOKEN=os.getenv('REFRESH_TOKEN')
-
-TAGS=os.getenv('TAGS')
-TITLE=os.getenv('TITLE')
-SHOP_ID=os.getenv('SHOP_ID')
-DESCRIPTION=os.getenv('DESCRIPTION')
-PRODUCT_TYPE=os.getenv('PRODUCT_TYPE')
+    KEYSTRING=os.getenv('KEYSTRING')
+    ACCESS_TOKEN=os.getenv('ACCESS_TOKEN')
+    REFRESH_TOKEN=os.getenv('REFRESH_TOKEN')
 
 def refreshEnvironmentVariableStores():
     global KEYSTRING,ACCESS_TOKEN,REFRESH_TOKEN,TAGS,TITLE,SHOP_ID,DESCRIPTION,PRODUCT_TYPE
@@ -51,29 +42,28 @@ def refreshEnvironmentVariableStores():
     DESCRIPTION=os.getenv('DESCRIPTION')
     PRODUCT_TYPE=os.getenv('PRODUCT_TYPE')
 
-etsy = EtsyAPI(KEYSTRING, ACCESS_TOKEN, REFRESH_TOKEN, EXPIRY_FUTURE, fn_save)
 
-def saveMultipleListingsToJSON():
+def saveMultipleListingsToJSON(etsy):
     data=etsy.get_listings_by_shop(SHOP_ID,ListingRequestState.DRAFT)
     json_object = json.dumps(data, indent=4)
     with open('output.json','w') as outfile:
         outfile.write(json_object)
 
-def saveExampleListingToJSON(listingID,productType):
+def saveExampleListingToJSON(etsy,listingID,productType):
     data=etsy.get_listing(listingID)
     json_object = json.dumps(data, indent=4)
     path = 'templates/products/example'+productType+'Listing.json'
     with open(path,'w') as outfile:
         outfile.write(json_object)
 
-def saveExampleListingImagesToJSON(listingID,productType):
+def saveExampleListingImagesToJSON(etsy,listingID,productType):
     data=etsy.get_listing_images(listingID)
     json_object = json.dumps(data, indent=4)
     path = 'templates/products/example'+productType+'ImagesListing.json'
     with open(path,'w') as outfile:
         outfile.write(json_object)
 
-def saveShopSectionsToJSON(listingID,productType):
+def saveShopSectionsToJSON(etsy,listingID,productType):
     data=etsy.get_shop_sections(SHOP_ID)
     json_object = json.dumps(data, indent=4)
     with open('templates/products/sections.json','w') as outfile:
@@ -88,8 +78,13 @@ def saveShopSectionsToJSON(listingID,productType):
 # saveExampleListingToJSON(1692185394,'sweatshirts')
 
 
-def generateListing(productType):
+def generateListing(etsy,productType):
     #===============Create Draft Listing
+
+    TAGS=os.getenv('TAGS')
+    TITLE=os.getenv('TITLE')
+    SHOP_ID=os.getenv('SHOP_ID')
+    DESCRIPTION=os.getenv('DESCRIPTION')
 
     testimonailsID = [5868605322]
     otherImagesIDs = []
@@ -121,7 +116,9 @@ def generateListing(productType):
     
     etsy.create_draft_listing(SHOP_ID,listing)
 
-def uploadImages(listingID,pathToImage):
+def uploadImages(etsy,listingID,pathToImage):
+    SHOP_ID=os.getenv('SHOP_ID')
+
     listing_image_upload = UploadListingImageRequest(
             image_bytes=UploadListingImageRequest.generate_bytes_from_file(
                 pathToImage
@@ -129,14 +126,14 @@ def uploadImages(listingID,pathToImage):
         )
     etsy.upload_listing_image(SHOP_ID,listingID,listing_image_upload)
 
-def getListingInventory(listingID):
+def getListingInventory(etsy,listingID):
     data = etsy.get_listing_inventory(listingID)
     json_object = json.dumps(data, indent=4)
 
     with open('output.json','w') as outfile:
         outfile.write(json_object)
 
-def updateListingInventory(productType,listingID):
+def updateListingInventory(etsy,productType,listingID):
     product_list = []
     # Opening JSON file
     path = 'templates/products/' + productType + ".json"
@@ -172,12 +169,10 @@ def updateListingInventory(productType,listingID):
     etsy.update_listing_inventory(listingID,listing_inventory_request)
 
 
-def create_and_publish_baby():
+def create_and_publish_baby(etsy,productType):
 
-    ACCESS_TOKEN=os.getenv('ACCESS_TOKEN')
-    REFRESH_TOKEN=os.getenv('REFRESH_TOKEN')
-    EXPIRY_FUTURE = datetime.utcnow() + timedelta(hours=1)
-    etsy = EtsyAPI(KEYSTRING, ACCESS_TOKEN, REFRESH_TOKEN, EXPIRY_FUTURE, fn_save)
+    PRODUCT_TYPE=os.getenv('PRODUCT_TYPE')
+    SHOP_ID=os.getenv('SHOP_ID')
 
     productType =PRODUCT_TYPE
  
@@ -186,7 +181,7 @@ def create_and_publish_baby():
     while designIndex < 5:
         templateIndex = 0
         while templateIndex < 2:
-            generateListing(productType)
+            generateListing(etsy,productType)
             time.sleep(3)
             newListing = etsy.get_listings_by_shop(SHOP_ID,ListingRequestState.DRAFT)["results"][0]["listing_id"]
 
@@ -197,15 +192,15 @@ def create_and_publish_baby():
             colorIndex = 0
 
             for colorIndex in range(2,7):
-                pathToImage = "output/" + str(designIndex) + str(colorIndex) + ".jpg"
-                uploadImages(listingID,pathToImage)
+                pathToImage = "public/output/" + str(designIndex) + str(colorIndex) + ".jpg"
+                uploadImages(etsy,listingID,pathToImage)
                 time.sleep(3)
                 colorIndex +=1
 
-            pathToImage = "output/" + str(designIndex) + str(templateIndex) + ".jpg"
-            uploadImages(listingID,pathToImage)
+            pathToImage = "public/output/" + str(designIndex) + str(templateIndex) + ".jpg"
+            uploadImages(etsy,listingID,pathToImage)
 
-            updateListingInventory(productType,listingID)
+            updateListingInventory(etsy,productType,listingID)
 
             update = UpdateListingRequest(
                 state=ListingRequestState.ACTIVE,

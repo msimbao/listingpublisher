@@ -6,12 +6,15 @@ from flask import Flask, render_template, request
 from dotenv import set_key, load_dotenv
 from pathlib import Path
 
+from datetime import datetime, timedelta
+
 #Custom Modules
 import generateDesigns as generateDesigns
 import generateMockups
 import apiFunctions
 
 #Etsy API Modules
+from etsyv3 import EtsyAPI
 from etsyv3.util.auth import AuthHelper
 
 load_dotenv()
@@ -31,6 +34,9 @@ auth_link = "https://www.etsy.com/oauth/connect?response_type=code&redirect_uri=
 
 code_verifier = os.getenv('CODE_VERIFIER');
 redirect_url=os.getenv('REDIRECT_URI')
+
+def fn_save(one, two, three):
+    pass
 
 app = Flask(__name__, static_folder='public', template_folder='views')
 
@@ -64,6 +70,7 @@ def index():
     tags=os.getenv('TAGS')
     section=os.getenv('SECTION')
     productType=os.getenv('PRODUCT_TYPE')
+    
 
     return render_template('index.html',
                            name=name,
@@ -90,7 +97,7 @@ def read_form():
     set_key(dotenv_path=env_file_path, key_to_set="DESIGN_LINE3", value_to_set=data['design_line3'])
     set_key(dotenv_path=env_file_path, key_to_set="DESIGN_LINE4", value_to_set=data['design_line4'])
     set_key(dotenv_path=env_file_path, key_to_set="TITLE", value_to_set=data['title'])
-    set_key(dotenv_path=env_file_path, key_to_set="TAGS", value_to_set=data['tags'])
+    set_key(dotenv_path=env_file_path, key_to_set="TAGS", value_to_set=data['tags'].replace('"', ''))
     set_key(dotenv_path=env_file_path, key_to_set="SECTION", value_to_set=data['section'])
     set_key(dotenv_path=env_file_path, key_to_set="PRODUCT_TYPE", value_to_set=data['productType'])
 
@@ -100,7 +107,7 @@ def read_form():
     os.environ["DESIGN_LINE3"] = data['design_line3']
     os.environ["DESIGN_LINE4"] = data['design_line4']
     os.environ["TITLE"] = data['title']
-    os.environ["TAGS"] = data['tags']
+    os.environ["TAGS"] = data['tags'].replace('"', '')
     os.environ["SECTION"] = data['section']
     os.environ["PRODUCT_TYPE"] = data['productType']
 
@@ -125,7 +132,7 @@ def generate_mockups():
 
     generateMockups.generateAllImages(designIndex,templateIndex,colorIndex,productType)
 
-    return finished()
+    return preview_images()
 
 @app.route("/preview-images")
 def preview_images():
@@ -140,13 +147,20 @@ def finished():
 @app.route("/get-listing-inventory")
 def get_listing_inventory():
 
-    apiFunctions.ACCESS_TOKEN = os.environ["ACCESS_TOKEN"]
-    apiFunctions.REFRESH_TOKEN = os.environ["REFRESH_TOKEN"]
+    load_dotenv()
+
+    access=os.getenv('ACCESS_TOKEN')
+    refresh=os.getenv('REFRESH_TOKEN')
+    expire = datetime.utcnow() + timedelta(hours=1)
+    key=os.getenv('KEYSTRING')
+    productType = os.environ["PRODUCT_TYPE"]
+
+    etsy = EtsyAPI(key, access, refresh, expire, fn_save)
 
     # apiFunctions.refreshEnvironmentVariableStores()
-    apiFunctions.create_and_publish_baby()
+    apiFunctions.create_and_publish_baby(etsy,productType)
 
     return render_template("finished.html")
 
 if __name__ == '__main__':
-    app.run(debug=True, port=3003)
+    app.run(port=3003)
