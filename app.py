@@ -5,7 +5,7 @@ import time
 from flask import Flask, render_template, request
 from dotenv import set_key, load_dotenv
 from pathlib import Path
-
+import webbrowser
 from datetime import datetime, timedelta
 
 #Custom Modules
@@ -164,3 +164,4 @@ def get_listing_inventory():
 
 if __name__ == '__main__':
     app.run(port=3003)
+    webbrowser.open('http://127.0.0.1:3003/')  # Go to example.com

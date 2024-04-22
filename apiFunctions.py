@@ -169,6 +169,42 @@ def updateListingInventory(etsy,productType,listingID):
     etsy.update_listing_inventory(listingID,listing_inventory_request)
 
 
+def updateListingInventory(etsy,listingID,path):
+    product_list = []
+    # Opening JSON file
+    path = path
+    with open(path) as json_file:
+        data = json.load(json_file)
+
+        products = data['products']
+        offerings = []
+        properties = []
+
+        for product in products:
+            offerings = product['offerings']
+            del offerings[0]['is_deleted']
+            del offerings[0]['offering_id']
+            offerings[0]['is_enabled'] = True
+
+            price = '{0:.2f}'.format(offerings[0]['price']['amount'] / offerings[0]['price']['divisor'])
+            offerings[0]['price'] = price
+
+            properties = product['property_values']
+            for property in properties:
+                del property['scale_id']
+                del property['scale_name']
+
+            productToWrite = Product("",properties,offerings)
+            product_list.append(productToWrite)
+
+    price_on_property = [513,514]
+    quantity_on_property = [513,514]
+
+    listing_inventory_request = UpdateListingInventoryRequest(product_list, price_on_property, quantity_on_property, 0)
+
+    etsy.update_listing_inventory(listingID,listing_inventory_request)
+
+
 def create_and_publish_baby(etsy,productType):
 
     PRODUCT_TYPE=os.getenv('PRODUCT_TYPE')
