@@ -163,5 +163,5 @@ def get_listing_inventory():
     return render_template("finished.html")
 
 if __name__ == '__main__':
-    app.run(port=3003)
     webbrowser.open('http://127.0.0.1:3003/')  # Go to example.com
+    app.run(port=3003)
