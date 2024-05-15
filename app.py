@@ -26,6 +26,28 @@ env_file_path = Path(".env")
 #Define Variables for Current Design
 name = 'Mphatso'
 
+sections_dictionary = {
+    42378910 : "Book Lover",
+    42393967 : "Food",
+    42395337 : "Funny Other",
+    42395341 : "Hobby / Passion / Other",
+    42395343 : "Sport",
+    42395347 : "Farm Life / Country",
+    42395351 : "Introvert",
+    42381728 : "Conditions",
+    42395359 : "Camping / Lake / Travel",
+    42381732 : "Nurse / Dentist / Doctor",
+    42381736 : "Real Estate",
+    42381740 : "Flower / Plant Lover",
+    42381742 : "Dog / Cat / Animal",
+    42381746 : "Baking / Cookie Lover",
+    42381752 : "Teacher / Therapist",
+    42381754 : "Inspirational",
+    42381756 : "Pregnancy Announcement",
+    42381760 : "Wedding Bridal Party",
+    42395385 : "Mom, Dad, Family"
+}
+
 #Generate Authentication Link ALL REMAIN THE SAME
 keystring=os.getenv('KEYSTRING')
 state=os.getenv('STATE')
@@ -70,6 +92,7 @@ def index():
     tags=os.getenv('TAGS')
     section=os.getenv('SECTION')
     productType=os.getenv('PRODUCT_TYPE')
+    section_name = sections_dictionary[int(section)]
     
 
     return render_template('index.html',
@@ -82,7 +105,8 @@ def index():
                            title=title,
                            tags=tags,
                            section=section,
-                           productType=productType
+                           productType=productType,
+                           section_name = section_name
                            )
 
 @app.route('/read-form', methods=['POST']) 
