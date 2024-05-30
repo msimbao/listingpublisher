@@ -4,6 +4,8 @@ from PIL import Image, ImageDraw, ImageFont
 nectarinePalette=[(242,202,141,255),(247,187,153,255),(249,221,210,255),(225,183,208,255)]
 marginPalette=[(185,92,42,255),(224,165,52,255),(167,185,148,255),(109,146,121,255)]
 
+nectarineSandPalette=[(203, 162, 104, 255),(213, 152, 118, 255),(209, 177, 155,255),(179, 137, 146, 255)]
+
 MAX_W, MAX_H = 1550, 2000
 
 def generateDesign(designWords,outputNumber,font,style,palette,MAX_W,MAX_H):
@@ -74,6 +76,8 @@ def MakeAllDesigns(currentDesign):
     generateDesign(currentDesign,1,'summer','plain',None,1400,2000)
     generateDesign(currentDesign,2,'margin','colorLine',marginPalette,1550, 2000)
     generateDesign(currentDesign,3,'nectarine','colorLine',nectarinePalette,1550,2000)
+# generateDesign(currentDesign,3,'nectarine','colorLine',nectarineSandPalette,1550,2000)
+
     generateDesign(currentDesign,4,'margin','colorCharacter',marginPalette,1550,2000)
     generateDesign(currentDesign,5,'nectarine','colorCharacter',nectarinePalette,1550,2000)
 
