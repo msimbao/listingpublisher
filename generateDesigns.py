@@ -36,6 +36,11 @@ def generateDesign(designWords,outputNumber,font,style,palette,MAX_W,MAX_H):
         case "plain":
             for line in designWords:
                 w = draw.textlength(line, font=imageFont)
+                draw.text(( ((MAX_W - w) / 2)-70, current_h), line, font=imageFont)
+                current_h += pad
+        case "plainUpper":
+            for line in designWords:
+                w = draw.textlength(line, font=imageFont)
                 draw.text(( ((MAX_W - w) / 2)-70, current_h), line.upper(), font=imageFont)
                 current_h += pad
         case "colorLine":
@@ -73,7 +78,10 @@ def MakeAllDesigns(currentDesign):
     Args:
         currentDesign (_type_): _description_
     """
-    generateDesign(currentDesign,1,'summer','plain',None,1400,2000)
+    generateDesign(currentDesign,1,'summer','plainUpper',None,1400,2000)
+    generateDesign(currentDesign,6,'bebas','plainUpper',None,1400,2000)
+    generateDesign(currentDesign,7,'clicker','plain',None,1400,2000)
+
     generateDesign(currentDesign,2,'margin','colorLine',marginPalette,1550, 2000)
     generateDesign(currentDesign,3,'nectarine','colorLine',nectarinePalette,1550,2000)
 # generateDesign(currentDesign,3,'nectarine','colorLine',nectarineSandPalette,1550,2000)

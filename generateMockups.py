@@ -37,7 +37,7 @@ def GenerateFinalImage(designNumber,tempNumber,designIndex,design,template,produ
 
     if (tempNumber == 3) or (tempNumber == 4):
         finalImage = Multiply(template,designMask).convert('RGB')
-        if ( designNumber == 1):
+        if(designNumber == 1) or (designNumber == 6) or (designNumber == 7):
             finalImage = Difference(template, designMask).convert('RGB')
     else:
         finalImage = Normal(template, designMask).convert('RGB')
@@ -128,7 +128,7 @@ def generateAllImages(designIndex,templateIndex,colorIndex,productType):
 
             if (colorNumber == 3) or (colorNumber == 4):
                 finalImage = Multiply(color,colorMask).convert('RGB')
-                if(designNumber == 1):
+                if(designNumber == 1) or (designNumber == 6) or (designNumber == 7):
                     finalImage = Difference(color, colorMask).convert('RGB')
             else:
                 finalImage = Normal(color, colorMask).convert('RGB')

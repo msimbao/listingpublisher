@@ -87,6 +87,7 @@ def index():
     design_line2=os.getenv('DESIGN_LINE2')
     design_line3=os.getenv('DESIGN_LINE3')
     design_line4=os.getenv('DESIGN_LINE4')
+    design_line5=os.getenv('DESIGN_LINE5')
 
     title=os.getenv('TITLE')
     tags=os.getenv('TAGS')
@@ -102,6 +103,8 @@ def index():
                            design_line2=design_line2,
                            design_line3=design_line3,
                            design_line4=design_line4,
+                           design_line5=design_line5,
+
                            title=title,
                            tags=tags,
                            section=section,
@@ -120,6 +123,8 @@ def read_form():
     set_key(dotenv_path=env_file_path, key_to_set="DESIGN_LINE2", value_to_set=data['design_line2'])
     set_key(dotenv_path=env_file_path, key_to_set="DESIGN_LINE3", value_to_set=data['design_line3'])
     set_key(dotenv_path=env_file_path, key_to_set="DESIGN_LINE4", value_to_set=data['design_line4'])
+    set_key(dotenv_path=env_file_path, key_to_set="DESIGN_LINE5", value_to_set=data['design_line5'])
+
     set_key(dotenv_path=env_file_path, key_to_set="TITLE", value_to_set=data['title'])
     set_key(dotenv_path=env_file_path, key_to_set="TAGS", value_to_set=data['tags'].replace('"', ''))
     set_key(dotenv_path=env_file_path, key_to_set="SECTION", value_to_set=data['section'])
@@ -130,6 +135,8 @@ def read_form():
     os.environ["DESIGN_LINE2"] = data['design_line2']
     os.environ["DESIGN_LINE3"] = data['design_line3']
     os.environ["DESIGN_LINE4"] = data['design_line4']
+    os.environ["DESIGN_LINE5"] = data['design_line5']
+
     os.environ["TITLE"] = data['title']
     os.environ["TAGS"] = data['tags'].replace('"', '')
     os.environ["SECTION"] = data['section']
@@ -140,7 +147,7 @@ def read_form():
 @app.route('/generate-designs', methods=['POST','GET']) 
 def generate_designs(): 
     
-    current_design = [os.environ["DESIGN_LINE1"],os.environ["DESIGN_LINE2"],os.environ["DESIGN_LINE3"],os.environ["DESIGN_LINE4"]]
+    current_design = [os.environ["DESIGN_LINE1"],os.environ["DESIGN_LINE2"],os.environ["DESIGN_LINE3"],os.environ["DESIGN_LINE4"],os.environ["DESIGN_LINE5"]]
 
     generateDesigns.MakeAllDesigns(current_design)
 
